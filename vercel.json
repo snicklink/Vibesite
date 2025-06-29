@@ -1,30 +1,7 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxDuration": 30
-      }
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/server.js"
-    },
-    {
-      "src": "/admin",
-      "dest": "/api/admin.html"
-    },
-    {
-      "src": "/uploads/(.*)",
-      "dest": "/api/uploads/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/$1"
-    }
-  ]
+  }
 }
