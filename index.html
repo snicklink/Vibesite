@@ -30,8 +30,10 @@
         </div>
     </section>
 
-    <section id="spiele" class="game-grid" id="gamesGrid">
-        <!-- Games will be inserted here -->
+    <section id="spiele">
+        <div id="gamesGrid" class="game-grid">
+            <!-- Games will be inserted here -->
+        </div>
     </section>
 
     <section id="vibecoding" class="vibecoding">
@@ -48,59 +50,30 @@
         </a>
     </aside>
 
+    <!-- Game Details Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="" class="modal-image">
+                <div class="modal-text">
+                    <h2 id="modalTitle"></h2>
+                    <p id="modalDescription"></p>
+                    <a id="modalPlayBtn" href="" class="play-btn modal-play-btn">Jetzt spielen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>© 2025 Snicklink Vibe Schwurbling | <a href="#">Kontakt</a> | <a href="#">Datenschutz</a></p>
     </footer>
 
     <script>
-        // Simple project loader - loads from markdown frontmatter
         async function loadProjects() {
             try {
-                // In a real static site generator, this would be done at build time
-                // For now, we'll use a simple fallback with the existing data
-                const projects = [
-                    {
-                        title: "Bratwurst Bomber",
-                        description: "Schieß Würstchen auf Viren und Pfizer – rette die Galaxie vor der Corona-Psyop!",
-                        image: "images/bratwurst.jpg",
-                        url: "https://bratwurst.snicklink.de",
-                        color: "#D946EF",
-                        featured: true,
-                        new: true,
-                        order: 1
-                    },
-                    {
-                        title: "Kanzlersimulator",
-                        description: "Wähl dich 2025 durch Chaos, PR-Pannen und Perks – wer wird Kanzler?",
-                        image: "images/kanzler.jpg",
-                        url: "https://kanzler.snicklink.de",
-                        color: "#3B82F6",
-                        featured: false,
-                        new: false,
-                        order: 2
-                    },
-                    {
-                        title: "Chemtrail Fighter",
-                        description: "Flieg gegen Reptiloid-Jets und Schwab – säuber den Himmel von Chemtrails!",
-                        image: "images/chems.jpg",
-                        url: "https://chemtrailfighter.com",
-                        color: "#F97316",
-                        featured: false,
-                        new: false,
-                        order: 3
-                    },
-                    {
-                        title: "Call of Blackrock: Merz Mayhem",
-                        description: "Verschwende Kredite mit Merz – ruiniere die Wirtschaft, so schnell du kannst!",
-                        image: "images/blackrock.jpg",
-                        url: "https://fritz.snicklink.de",
-                        color: "#EF4444",
-                        featured: false,
-                        new: false,
-                        order: 4
-                    }
-                ];
-
+                const response = await fetch('projects.json');
+                const projects = await response.json();
                 renderProjects(projects);
             } catch (error) {
                 console.error('Error loading projects:', error);
@@ -123,12 +96,70 @@
             `;
 
             // Render all games
-            document.getElementById('gamesGrid').innerHTML = projects.map(project => `
+            document.getElementById('gamesGrid').innerHTML = projects.map((project, index) => `
                 <div class="game">
                     <img src="${project.image}" alt="${project.title}" class="thumbnail">
                     <h3 style="color: ${project.color};">${project.title} ${project.new ? '<span class="new-tag">Neu</span>' : ''}</h3>
                     <p>${project.description}</p>
-                    <a href="${project.url}" class="play-btn">Jetzt spielen</a>
+                    <div class="game-buttons">
+                        <a href="${project.url}" class="play-btn">Jetzt spielen</a>
+                        ${project.longDescription ? `<button class="more-btn" onclick="showGameDetails(${index})">Mehr</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        let currentProjects = [];
+
+        function showGameDetails(index) {
+            const project = currentProjects[index];
+            document.getElementById('modalTitle').textContent = project.title;
+            document.getElementById('modalImage').src = project.image;
+            document.getElementById('modalImage').alt = project.title;
+            document.getElementById('modalDescription').textContent = project.longDescription;
+            document.getElementById('modalPlayBtn').href = project.url;
+            document.getElementById('gameModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('gameModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        function renderProjects(projects) {
+            currentProjects = projects; // Store for modal access
+            
+            // Sort by order
+            projects.sort((a, b) => a.order - b.order);
+            
+            // Find featured project
+            const featured = projects.find(p => p.featured) || projects[0];
+            
+            // Render featured game
+            document.getElementById('featuredGame').innerHTML = `
+                <img src="${featured.image}" alt="${featured.title}" class="thumbnail">
+                <h2 style="color: ${featured.color};">${featured.title} ${featured.new ? '<span class="new-tag">Neu</span>' : ''}</h2>
+                <p>${featured.description}</p>
+                <a href="${featured.url}" class="play-btn">Jetzt spielen</a>
+            `;
+
+            // Render all games
+            document.getElementById('gamesGrid').innerHTML = projects.map((project, index) => `
+                <div class="game">
+                    <img src="${project.image}" alt="${project.title}" class="thumbnail">
+                    <h3 style="color: ${project.color};">${project.title} ${project.new ? '<span class="new-tag">Neu</span>' : ''}</h3>
+                    <p>${project.description}</p>
+                    <div class="game-buttons">
+                        <a href="${project.url}" class="play-btn">Jetzt spielen</a>
+                        ${project.longDescription ? `<button class="more-btn" onclick="showGameDetails(${index})">Mehr</button>` : ''}
+                    </div>
                 </div>
             `).join('');
         }

@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Bratwurst Bomber",
+    "description": "Schieß Würstchen auf Viren und Pfizer – rette die Galaxie vor der Corona-Psyop!",
+    "url": "https://bratwurst.snicklink.de",
+    "image": "images/bratwurst.jpg",
+    "color": "#d946ef",
+    "featured": false,
+    "new": false,
+    "order": 1
+  },
+  {
+    "title": "Kanzlersimulator",
+    "description": "Wähl dich 2025 durch Chaos, PR-Pannen und Perks – wer wird Kanzler?",
+    "image": "images/kanzler.jpg",
+    "url": "https://kanzler.snicklink.de",
+    "color": "#3B82F6",
+    "featured": false,
+    "new": false,
+    "order": 2
+  },
+  {
+    "title": "Chemtrail Fighter",
+    "description": "Flieg gegen Reptiloid-Jets und Schwab – säuber den Himmel von Chemtrails!",
+    "image": "images/chems.jpg",
+    "url": "https://chemtrailfighter.com",
+    "color": "#F97316",
+    "featured": false,
+    "new": false,
+    "order": 3
+  },
+  {
+    "title": "Call of Blackrock: Merz Mayhem",
+    "description": "Verschwende Kredite mit Merz – ruiniere die Wirtschaft, so schnell du kannst!",
+    "image": "images/blackrock.jpg",
+    "url": "https://fritz.snicklink.de",
+    "color": "#EF4444",
+    "featured": false,
+    "new": false,
+    "order": 4
+  },
+  {
+    "title": "Vibe Tales",
+    "description": "Eine interaktive Geschichte voller Abenteuer und Entscheidungen.",
+    "longDescription": "Tauche ein in eine faszinierende Welt voller magischer Geschichten und epischer Abenteuer. Vibe Tales ist ein innovatives narratives Spiel, das deine Entscheidungen in den Mittelpunkt stellt. Jede Wahl, die du triffst, beeinflusst den Verlauf der Geschichte und führt zu völlig unterschiedlichen Enden. Erlebe eine cinematische Erzählung mit atemberaubenden Visuals, einem packenden Soundtrack und unvergesslichen Charakteren. Von mystischen Wäldern bis hin zu futuristischen Städten - jede Umgebung wurde liebevoll gestaltet und wartet darauf, von dir erkundet zu werden. Mit über 20 verschiedenen Handlungssträngen und multiplen Enden bietet Vibe Tales stundenlangen Spielspaß und hohen Wiederspielwert.",
+    "url": "https://snicklink.de",
+    "image": "images/vt.jpg",
+    "color": "#55ff99",
+    "featured": true,
+    "new": true,
+    "order": 1
+  },
+  {
+    "title": "Sim Willy v1",
+    "description": "xxx",
+    "url": "https://snicklink.de",
+    "image": "images/simwilly.jpg",
+    "color": "#55ff99",
+    "featured": false,
+    "new": true,
+    "order": 6
+  },
+  {
+    "title": "Miami Voice",
+    "description": "xxx",
+    "url": "https://miamivoice.de",
+    "image": "images/social.png",
+    "color": "#55ff99",
+    "featured": false,
+    "new": true,
+    "order": 1
+  }
+]

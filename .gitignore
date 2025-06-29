@@ -49,3 +49,10 @@ Thumbs.db
 
 # Backup files
 backend/
+
+# Local development files (keep admin local only)
+server.js
+save-projects.php
+test.html
+admin.html
+admin-simple.html
