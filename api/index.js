@@ -402,5 +402,29 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
+// Simple admin route that works with Vercel
+app.get('/', (req, res) => {
+  // If the request is for /api, serve API
+  // If the request is for /admin, serve admin panel
+  const url = req.originalUrl || req.url;
+  
+  if (url === '/admin' || url.includes('admin')) {
+    const adminPath = path.join(__dirname, 'admin.html');
+    const adminHTML = fs.readFileSync(adminPath, 'utf8');
+    res.setHeader('Content-Type', 'text/html');
+    return res.send(adminHTML);
+  }
+  
+  // Default API response
+  res.json({ 
+    message: 'Vibegame API is running', 
+    endpoints: {
+      admin: '/admin',
+      projects: '/api/projects',
+      auth: '/api/auth/login'
+    }
+  });
+});
+
 // Export for Vercel
 module.exports = app;
