@@ -25,25 +25,27 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Create uploads directory if it doesn't exist  
+// For Vercel serverless - use in-memory storage for demo
+// In production, you'd want to use Vercel Blob Storage or similar
 const uploadsDir = '/tmp/uploads';
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Database setup - Use /tmp for Vercel
-const dbPath = '/tmp/database.db';
-const db = new sqlite3.Database(dbPath);
+// Use in-memory SQLite for Vercel demo
+// In production, switch to Vercel Postgres or PlanetScale
+const db = new sqlite3.Database(':memory:');
 
 // Initialize database tables
 db.serialize(() => {
-  // Projects table
+  // Projects table with base64 image storage
   db.run(`CREATE TABLE IF NOT EXISTS projects (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     long_description TEXT,
-    image_path TEXT,
+    image_data TEXT,
+    image_type TEXT,
     project_url TEXT,
     category TEXT DEFAULT 'Spiele',
     color TEXT DEFAULT '#D946EF',
@@ -84,20 +86,10 @@ db.serialize(() => {
   });
 });
 
-// File upload configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'project-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
+// Simplified file upload for Vercel - store as base64 in database
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit for serverless
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -184,7 +176,34 @@ app.get('/api/projects', (req, res) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.json(rows);
+    
+    // Convert base64 images to data URLs for frontend
+    const projectsWithImages = rows.map(project => ({
+      ...project,
+      image_url: project.image_data ? `data:${project.image_type};base64,${project.image_data}` : null
+    }));
+    
+    res.json(projectsWithImages);
+  });
+});
+
+// Serve individual project images
+app.get('/api/image/:id', (req, res) => {
+  const { id } = req.params;
+  
+  db.get("SELECT image_data, image_type FROM projects WHERE id = ?", [id], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    
+    if (!row || !row.image_data) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+    
+    const imageBuffer = Buffer.from(row.image_data, 'base64');
+    res.setHeader('Content-Type', row.image_type);
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.send(imageBuffer);
   });
 });
 
@@ -239,31 +258,29 @@ app.post('/api/admin/projects', authenticateToken, upload.single('image'), [
   }
 
   const { title, description, long_description, project_url, category, color, is_featured, is_new } = req.body;
-  let imagePath = null;
+  let imageData = null;
+  let imageType = null;
 
   if (req.file) {
     try {
-      // Optimize image
-      const optimizedFilename = 'optimized-' + req.file.filename;
-      const optimizedPath = path.join(uploadsDir, optimizedFilename);
-      
-      await sharp(req.file.path)
+      // Process image and convert to base64
+      const processedImage = await sharp(req.file.buffer)
         .resize(500, 318, { fit: 'cover' })
         .jpeg({ quality: 80 })
-        .toFile(optimizedPath);
+        .toBuffer();
       
-      // Delete original
-      fs.unlinkSync(req.file.path);
-      imagePath = `/uploads/${optimizedFilename}`;
+      imageData = processedImage.toString('base64');
+      imageType = 'image/jpeg';
     } catch (error) {
       console.error('Image processing error:', error);
-      imagePath = `/uploads/${req.file.filename}`;
+      imageData = req.file.buffer.toString('base64');
+      imageType = req.file.mimetype;
     }
   }
 
   db.run(
-    "INSERT INTO projects (title, description, long_description, image_path, project_url, category, color, is_featured, is_new) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [title, description, long_description || null, imagePath, project_url || null, category || 'Spiele', color || '#D946EF', is_featured === 'true', is_new === 'true'],
+    "INSERT INTO projects (title, description, long_description, image_data, image_type, project_url, category, color, is_featured, is_new) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [title, description, long_description || null, imageData, imageType, project_url || null, category || 'Spiele', color || '#D946EF', is_featured === 'true', is_new === 'true'],
     function(err) {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -287,50 +304,36 @@ app.put('/api/admin/projects/:id', authenticateToken, upload.single('image'), (r
       return res.status(404).json({ error: 'Project not found' });
     }
 
-    let imagePath = project.image_path;
+    let imageData = project.image_data;
+    let imageType = project.image_type;
 
     // Handle image removal
     if (remove_image === 'true') {
-      if (project.image_path) {
-        const fullPath = path.join(__dirname, 'public', project.image_path);
-        if (fs.existsSync(fullPath)) {
-          fs.unlinkSync(fullPath);
-        }
-      }
-      imagePath = null;
+      imageData = null;
+      imageType = null;
     }
 
     // Handle new image upload
     if (req.file) {
-      // Remove old image
-      if (project.image_path) {
-        const oldPath = path.join(__dirname, 'public', project.image_path);
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
-        }
-      }
-
       try {
-        // Optimize new image
-        const optimizedFilename = 'optimized-' + req.file.filename;
-        const optimizedPath = path.join(uploadsDir, optimizedFilename);
-        
-        await sharp(req.file.path)
+        // Process new image
+        const processedImage = await sharp(req.file.buffer)
           .resize(500, 318, { fit: 'cover' })
           .jpeg({ quality: 80 })
-          .toFile(optimizedPath);
+          .toBuffer();
         
-        fs.unlinkSync(req.file.path);
-        imagePath = `/uploads/${optimizedFilename}`;
+        imageData = processedImage.toString('base64');
+        imageType = 'image/jpeg';
       } catch (error) {
         console.error('Image processing error:', error);
-        imagePath = `/uploads/${req.file.filename}`;
+        imageData = req.file.buffer.toString('base64');
+        imageType = req.file.mimetype;
       }
     }
 
     db.run(
-      "UPDATE projects SET title = ?, description = ?, long_description = ?, image_path = ?, project_url = ?, category = ?, color = ?, is_featured = ?, is_new = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-      [title, description, long_description || null, imagePath, project_url || null, category || 'Spiele', color || '#D946EF', is_featured === 'true', is_new === 'true', id],
+      "UPDATE projects SET title = ?, description = ?, long_description = ?, image_data = ?, image_type = ?, project_url = ?, category = ?, color = ?, is_featured = ?, is_new = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+      [title, description, long_description || null, imageData, imageType, project_url || null, category || 'Spiele', color || '#D946EF', is_featured === 'true', is_new === 'true', id],
       function(err) {
         if (err) {
           return res.status(500).json({ error: err.message });
@@ -345,24 +348,11 @@ app.put('/api/admin/projects/:id', authenticateToken, upload.single('image'), (r
 app.delete('/api/admin/projects/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
 
-  db.get("SELECT image_path FROM projects WHERE id = ?", [id], (err, project) => {
+  db.run("DELETE FROM projects WHERE id = ?", [id], function(err) {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-
-    if (project && project.image_path) {
-      const imagePath = path.join(__dirname, 'public', project.image_path);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
-    }
-
-    db.run("DELETE FROM projects WHERE id = ?", [id], function(err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ message: 'Project deleted successfully' });
-    });
+    res.json({ message: 'Project deleted successfully' });
   });
 });
 
@@ -394,8 +384,7 @@ app.post('/api/admin/theme', authenticateToken, [
   );
 });
 
-// Serve uploaded files
-app.use('/uploads', express.static(uploadsDir));
+// Note: No longer serving static files - images stored as base64 in database
 
 // Serve admin interface
 app.get('/admin', (req, res) => {
