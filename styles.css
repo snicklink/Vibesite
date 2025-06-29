@@ -1,0 +1,390 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #1F2525;
+    color: #B0B0B0;
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    width: 100%; /* Ensure body takes full width */
+}
+
+/* Header */
+header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #1F2525;
+    border-bottom: 1px solid #333333;
+    z-index: 10;
+}
+
+.logo {
+    /* font-size: 24px; Removed text styles */
+    /* font-weight: 600; */
+    /* color: #FFFFFF; */
+    /* Ensure the container doesn't force a width */
+    /* margin: 0 auto 20px; Removed margin, header handles positioning */
+}
+
+.logo img {
+    max-height: 50px; /* Restored smaller size for header */
+    height: auto; /* Maintain aspect ratio */
+    width: auto; /* Let height control the size */
+    display: block; /* Remove extra space below image */
+}
+
+nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 400;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: #55FF99;
+}
+
+/* Define the animation keyframes */
+@keyframes neonGradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 100px 20px; /* Increased top/bottom padding */
+}
+
+/* Styles for the logo specifically in the hero section */
+.hero-logo {
+    margin: 0 auto 30px; /* Increased bottom margin */
+    max-width: 180px; /* Slightly larger container for logo */
+}
+
+.hero-logo img {
+    max-height: 120px; /* Slightly larger logo */
+    height: auto;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 56px; /* Larger headline */
+    font-weight: 600;
+    /* Updated background for animation */
+    background: linear-gradient(90deg, #ff00ff, #00ff00, #00ffff, #ff8000, #ff00ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 20px; /* More spacing */
+    background-size: 400% auto;
+    animation: neonGradientShift 10s linear infinite;
+}
+
+.hero p {
+    font-size: 20px; /* Larger subtitle */
+    color: #B0B0B0;
+    margin-bottom: 60px; /* More space before the featured game */
+}
+
+.featured-game {
+    max-width: 600px; /* Increased from 400px */
+    margin: 0 auto;
+}
+
+.featured-game .thumbnail {
+    max-width: 500px; /* Larger thumbnail */
+    height: 318px; /* Maintain 991:630 aspect ratio (500/991*630) */
+    margin-bottom: 30px; /* More spacing below */
+}
+
+.featured-game h2 {
+    font-size: 30px; /* Larger title */
+    margin-bottom: 15px; /* More spacing */
+}
+
+.featured-game p {
+    font-size: 18px; /* Larger description */
+    margin-bottom: 20px;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.featured-game .play-btn {
+    padding: 12px 30px; /* Larger button */
+    font-size: 16px;
+}
+
+/* Game Grid */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 60px 40px;
+}
+
+.game, .featured-game {
+    text-align: center;
+}
+
+.thumbnail {
+    width: 100%;
+    max-width: 300px;
+    height: 191px; /* 991x630 scaled to 300px width: 300 / 991 * 630 ≈ 191 */
+    border-radius: 12px;
+    margin-bottom: 20px;
+    object-fit: cover;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-left: auto;  /* Center thumbnails */
+    margin-right: auto; /* Center thumbnails */
+}
+
+.game:hover .thumbnail {
+    transform: scale(1.03);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+h2, h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Style for the 'Neu' tag */
+.new-tag {
+    display: inline-block; /* Keep it on the same line */
+    background-color: #EF4444; /* Red background */
+    color: #FFFFFF; /* White text */
+    font-size: 0.7em; /* Smaller than the heading */
+    font-weight: bold;
+    padding: 2px 6px; /* Small padding */
+    border-radius: 4px; /* Slightly rounded corners */
+    margin-left: 8px; /* Space from the game title */
+    vertical-align: middle; /* Align vertically with text */
+}
+
+p {
+    font-size: 14px;
+    color: #B0B0B0;
+    margin-bottom: 15px;
+}
+
+.play-btn {
+    display: inline-block;
+    padding: 10px 25px;
+    border: 1px solid #FFFFFF;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    color: #FFFFFF;
+    background-color: transparent;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.play-btn:hover {
+    background-color: #FFFFFF;
+    color: #1F2525;
+}
+
+/* Vibecoding */
+.vibecoding, .vibecoding-full {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #252B2B;
+}
+
+.vibecoding h2, .vibecoding-full h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.vibecoding p, .vibecoding-full p {
+    max-width: 600px;
+    margin: 0 auto 25px;
+}
+
+.vibe-btn {
+    display: inline-block;
+    padding: 10px 25px;
+    border: 1px solid #55FF99;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    color: #55FF99;
+    background-color: transparent;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.vibe-btn:hover {
+    background-color: #55FF99;
+    color: #1F2525;
+}
+
+/* Ad Space */
+.ad-space {
+    text-align: center;
+    padding: 60px 40px;
+}
+
+.ad-space h3 {
+    font-size: 28px; /* Slightly larger for main title */
+    font-weight: 600;
+    color: #FFCC33; /* Keep the original color */
+    margin-bottom: 10px; /* Reduced bottom margin */
+}
+
+/* Styles for the new subtitle */
+.ad-subtitle {
+    font-size: 16px; /* Smaller font size */
+    color: #B0B0B0; /* Standard text color */
+    margin-bottom: 25px; /* Add margin below subtitle */
+    font-weight: 400;
+}
+
+/* Styles for the new image link container */
+.ad-link {
+    display: inline-block; /* Allows margin auto and transform */
+    margin: 0 auto 20px; /* Center and provide bottom margin */
+    transition: transform 0.2s ease-in-out; /* Smooth hover transition */
+}
+
+.ad-link:hover {
+    transform: scale(1.05); /* Scale up slightly on hover */
+}
+
+/* Styles for the image itself */
+.ad-thumbnail-img {
+    width: 200px;  /* Keep desired width (adjust if needed) */
+    height: auto; /* Allow height to adjust for aspect ratio */
+    border-radius: 12px; /* Rounded corners */
+    display: block; /* Prevents extra space below */
+    /* object-fit: cover; Removed as we want natural aspect ratio */
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 14px;
+    border-top: 1px solid #333333;
+}
+
+footer a {
+    color: #B0B0B0;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    color: #55FF99;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 20px;
+    }
+    nav {
+        margin-top: 15px;
+    }
+    .hero {
+        padding: 60px 20px;
+    }
+    .hero h1 {
+        font-size: 36px;
+    }
+    .hero p {
+        font-size: 16px;
+        margin-bottom: 40px;
+    }
+    .game-grid {
+        padding: 40px 20px;
+    }
+    
+    /* Make hero logo smaller on mobile */
+    .hero-logo {
+        max-width: 120px;
+    }
+    .hero-logo img {
+        max-height: 70px;
+    }
+    
+    /* Ensure thumbnails don't overflow */
+    .thumbnail {
+        max-width: 100%; /* Instead of fixed 300px */
+        height: auto; /* Let height adjust based on aspect ratio */
+        aspect-ratio: 991/630; /* Maintain aspect ratio */
+    }
+    
+    /* Make sure content doesn't overflow horizontally */
+    .hero, .game-grid, .vibecoding, .ad-space {
+        width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+        box-sizing: border-box;
+    }
+    
+    /* Make featured game container fully responsive */
+    .featured-game {
+        max-width: 100%;
+    }
+    
+    .featured-game .thumbnail {
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 991/630;
+        margin-bottom: 20px;
+    }
+    
+    .featured-game h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .featured-game p {
+        font-size: 16px;
+        margin-bottom: 15px;
+        max-width: 100%;
+    }
+    
+    .featured-game .play-btn {
+        padding: 10px 25px;
+        font-size: 14px;
+    }
+}
+
+/* Even smaller screens */
+@media (max-width: 480px) {
+    .hero-logo img {
+        max-height: 60px;
+    }
+    
+    .hero h1 {
+        font-size: 32px;
+    }
+    
+    /* Further reduce padding */
+    .hero, .game-grid, .vibecoding, .ad-space {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
