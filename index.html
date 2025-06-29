@@ -36,31 +36,8 @@
     </section>
 
     <!-- Game Grid -->
-    <section id="spiele" class="game-grid">
-        <div class="game">
-            <img src="images/kanzler.jpg" alt="Kanzlersimulator" class="thumbnail">
-            <h3 style="color: #3B82F6;">Kanzlersimulator</h3>
-            <p>Wähl dich 2025 durch Chaos, PR-Pannen und Perks – wer wird Kanzler?</p>
-            <a href="https://kanzler.snicklink.de" class="play-btn">Jetzt spielen</a>
-        </div>
-        <div class="game">
-            <img src="images/chems.jpg" alt="Chemtrail Fighter" class="thumbnail">
-            <h3 style="color: #F97316;">Chemtrail Fighter</h3>
-            <p>Flieg gegen Reptiloid-Jets und Schwab – säuber den Himmel von Chemtrails!</p>
-            <a href="https://chemtrailfighter.com" class="play-btn">Jetzt spielen</a>
-        </div>
-        <div class="game">
-            <img src="images/blackrock.jpg" alt="Call of Blackrock: Merz Mayhem" class="thumbnail">
-            <h3 style="color: #EF4444;">Call of Blackrock: Merz Mayhem</h3>
-            <p>Verschwende Kredite mit Merz – ruiniere die Wirtschaft, so schnell du kannst!</p>
-            <a href="https://fritz.snicklink.de" class="play-btn">Jetzt spielen</a>
-        </div>
-        <div class="game">
-            <img src="images/bratwurst.jpg" alt="Bratwurst Bomber" class="thumbnail">
-            <h3 style="color: #D946EF;">Bratwurst Bomber <span class="new-tag">Neu</span></h3>
-            <p>Schieß Würstchen auf Viren und Pfizer – rette die Galaxie vor der Corona-Psyop!</p>
-            <a href="https://bratwurst.snicklink.de" class="play-btn">Jetzt spielen</a>
-        </div>
+    <section id="spiele" class="game-grid" id="projectsGrid">
+        <!-- Projects will be loaded here -->
     </section>
 
     <!-- Vibecoding -->
@@ -84,5 +61,63 @@
     <footer>
         <p>© 2025 Snicklink Vibe Schwurbling | <a href="#">Kontakt</a> | <a href="#">Datenschutz</a></p>
     </footer>
+
+    <script>
+        // Load projects from data.json
+        async function loadProjects() {
+            try {
+                const response = await fetch('/data.json');
+                const data = await response.json();
+                const projects = data.projects || [];
+                
+                // Find featured project for hero section
+                const featuredProject = projects.find(p => p.featured) || projects[0];
+                if (featuredProject) {
+                    updateHeroSection(featuredProject);
+                }
+                
+                // Render all projects in grid
+                renderProjectsGrid(projects);
+                
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                // Fallback to existing hardcoded content if JSON fails
+            }
+        }
+
+        function updateHeroSection(project) {
+            const heroSection = document.querySelector('.featured-game');
+            if (heroSection) {
+                heroSection.innerHTML = `
+                    <img src="${project.image}" alt="${project.title}" class="thumbnail">
+                    <h2 style="color: ${project.color};">${project.title} ${project.new ? '<span class="new-tag">Neu</span>' : ''}</h2>
+                    <p>${project.description}</p>
+                    ${project.url ? `<a href="${project.url}" class="play-btn">Jetzt spielen</a>` : ''}
+                `;
+            }
+        }
+
+        function renderProjectsGrid(projects) {
+            const grid = document.getElementById('projectsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            projects.forEach(project => {
+                const gameDiv = document.createElement('div');
+                gameDiv.className = 'game';
+                gameDiv.innerHTML = `
+                    <img src="${project.image}" alt="${project.title}" class="thumbnail">
+                    <h3 style="color: ${project.color};">${project.title} ${project.new ? '<span class="new-tag">Neu</span>' : ''}</h3>
+                    <p>${project.description}</p>
+                    ${project.url ? `<a href="${project.url}" class="play-btn">Jetzt spielen</a>` : ''}
+                `;
+                grid.appendChild(gameDiv);
+            });
+        }
+
+        // Load projects when page loads
+        document.addEventListener('DOMContentLoaded', loadProjects);
+    </script>
 </body>
 </html>

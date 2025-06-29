@@ -1,0 +1,53 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "title": "Bratwurst Bomber",
+      "description": "Schieß Würstchen auf Viren und Pfizer – rette die Galaxie vor der Corona-Psyop!",
+      "longDescription": "",
+      "image": "images/bratwurst.jpg",
+      "url": "https://bratwurst.snicklink.de",
+      "category": "Spiele",
+      "color": "#D946EF",
+      "featured": true,
+      "new": true
+    },
+    {
+      "id": 2,
+      "title": "Kanzlersimulator",
+      "description": "Wähl dich 2025 durch Chaos, PR-Pannen und Perks – wer wird Kanzler?",
+      "longDescription": "",
+      "image": "images/kanzler.jpg",
+      "url": "https://kanzler.snicklink.de",
+      "category": "Spiele",
+      "color": "#3B82F6",
+      "featured": false,
+      "new": false
+    },
+    {
+      "id": 3,
+      "title": "Chemtrail Fighter",
+      "description": "Flieg gegen Reptiloid-Jets und Schwab – säuber den Himmel von Chemtrails!",
+      "longDescription": "",
+      "image": "images/chems.jpg",
+      "url": "https://chemtrailfighter.com",
+      "category": "Spiele",
+      "color": "#F97316",
+      "featured": false,
+      "new": false
+    },
+    {
+      "id": 4,
+      "title": "Call of Blackrock: Merz Mayhem",
+      "description": "Verschwende Kredite mit Merz – ruiniere die Wirtschaft, so schnell du kannst!",
+      "longDescription": "",
+      "image": "images/blackrock.jpg",
+      "url": "https://fritz.snicklink.de",
+      "category": "Spiele",
+      "color": "#EF4444",
+      "featured": false,
+      "new": false
+    }
+  ],
+  "theme": "default"
+}
