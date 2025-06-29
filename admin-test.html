@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vibegame Admin - Test Mode</title>
+    <script src="https://unpkg.com/@sveltia/cms@latest/dist/sveltia-cms.js" type="module"></script>
+  </head>
+  <body>
+    <script>
+      window.CMS_CONFIG = {
+        backend: {
+          name: 'test-repo'
+        },
+        media_folder: 'images',
+        public_folder: '/images',
+        collections: [
+          {
+            name: 'projects',
+            label: 'Projects',
+            folder: '_projects',
+            create: true,
+            slug: '{{slug}}',
+            fields: [
+              { label: 'Title', name: 'title', widget: 'string' },
+              { label: 'Description', name: 'description', widget: 'text' },
+              { label: 'Long Description', name: 'long_description', widget: 'text', required: false },
+              { label: 'Image', name: 'image', widget: 'image' },
+              { label: 'Project URL', name: 'url', widget: 'string', required: false },
+              { label: 'Category', name: 'category', widget: 'select', options: ['Spiele', 'Apps', 'Experimentell', 'Systeme'], default: 'Spiele' },
+              { label: 'Color', name: 'color', widget: 'color', default: '#D946EF' },
+              { label: 'Featured', name: 'featured', widget: 'boolean', default: false },
+              { label: 'New', name: 'new', widget: 'boolean', default: false },
+              { label: 'Order', name: 'order', widget: 'number', default: 0 }
+            ]
+          }
+        ]
+      };
+    </script>
+  </body>
+</html>

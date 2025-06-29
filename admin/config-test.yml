@@ -1,9 +1,5 @@
 backend:
-  name: github
-  repo: snicklink/Vibesite
-  branch: main
-  base_url: https://vibesite-wheat.vercel.app
-  auth_endpoint: api/auth
+  name: test-repo
 
 media_folder: "images"
 public_folder: "/images"
