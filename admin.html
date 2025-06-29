@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibegame Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #1F2525;
+            color: #B0B0B0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333333;
+        }
+
+        .header h1 {
+            font-size: 56px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #ff00ff, #00ff00, #00ffff, #ff8000, #ff00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            background-size: 400% auto;
+            animation: neonGradientShift 10s linear infinite;
+        }
+
+        @keyframes neonGradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header p {
+            color: #B0B0B0;
+            font-size: 18px;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: #252B2B;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #333333;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            border: 1px solid #FFFFFF;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #FFFFFF;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: #FFFFFF;
+            color: #1F2525;
+        }
+
+        .nav-btn.active {
+            border-color: #55FF99;
+            color: #55FF99;
+        }
+
+        .nav-btn.active:hover {
+            background-color: #55FF99;
+            color: #1F2525;
+        }
+
+        .section {
+            display: none;
+            background-color: #252B2B;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #333333;
+            margin-bottom: 20px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #55FF99;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #55FF99;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            background-color: #1F2525;
+            color: #FFFFFF;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #55FF99;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .drag-drop-area {
+            border: 2px dashed #55FF99;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            background-color: #1F2525;
+        }
+
+        .drag-drop-area:hover {
+            background-color: rgba(85, 255, 153, 0.1);
+        }
+
+        .drag-drop-area.dragover {
+            background-color: rgba(85, 255, 153, 0.2);
+            border-color: #55FF99;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            border: 1px solid #55FF99;
+            background-color: transparent;
+            color: #55FF99;
+        }
+
+        .btn-primary:hover {
+            background-color: #55FF99;
+            color: #1F2525;
+        }
+
+        .btn-danger {
+            border: 1px solid #EF4444;
+            background-color: transparent;
+            color: #EF4444;
+        }
+
+        .btn-danger:hover {
+            background-color: #EF4444;
+            color: #FFFFFF;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .project-card {
+            background-color: #1F2525;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #333333;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .project-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .project-card h3 {
+            margin-bottom: 10px;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        .project-card p {
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-preview {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .theme-card {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .theme-card:hover {
+            transform: scale(1.05);
+        }
+
+        .theme-card.selected {
+            border-color: #4ecdc4;
+        }
+
+        .color-strip {
+            height: 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 1px solid #EF4444;
+            background-color: transparent;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #EF4444;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .logout-btn:hover {
+            background-color: #EF4444;
+            color: #FFFFFF;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .alert-success {
+            background-color: rgba(85, 255, 153, 0.1);
+            color: #55FF99;
+            border: 1px solid #55FF99;
+        }
+
+        .alert-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+            border: 1px solid #EF4444;
+        }
+
+        @media (max-width: 768px) {
+            .admin-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-preview {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loginContainer" class="auth-container">
+        <h2 style="text-align: center; margin-bottom: 30px;">Admin Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+        </form>
+    </div>
+
+    <div id="adminPanel" class="container" style="display: none;">
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        
+        <div class="header">
+            <h1>Vibecoding Admin</h1>
+            <p>Manage your Schwurble-Games und Themes</p>
+        </div>
+
+        <div class="admin-nav">
+            <button class="nav-btn active" onclick="showSection('projects')">Projects</button>
+            <button class="nav-btn" onclick="showSection('themes')">Themes</button>
+        </div>
+
+        <div id="alerts"></div>
+
+        <!-- Projects Section -->
+        <div id="projectsSection" class="section active">
+            <h2>Project Management</h2>
+            
+            <form id="projectForm" style="margin-bottom: 30px;">
+                <input type="hidden" id="projectId" name="projectId">
+                
+                <div class="form-group">
+                    <label for="title">Project Title:</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Short Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="longDescription">Long Description (optional):</label>
+                    <textarea id="longDescription" name="longDescription"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="projectUrl">Project URL:</label>
+                    <input type="url" id="projectUrl" name="projectUrl" placeholder="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Kategorie:</label>
+                    <select id="category" name="category" required>
+                        <option value="Spiele">Spiele</option>
+                        <option value="Apps">Apps</option>
+                        <option value="Experimentell">Experimentell</option>
+                        <option value="Systeme">Systeme</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="color">Accent Color:</label>
+                    <input type="color" id="color" name="color" value="#D946EF">
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="isFeatured" name="isFeatured">
+                        Featured Project
+                    </label>
+                    <label>
+                        <input type="checkbox" id="isNew" name="isNew">
+                        New Project
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>Project Image:</label>
+                    <div class="drag-drop-area" id="dragDropArea">
+                        <p>Drag & drop an image here or click to select</p>
+                        <input type="file" id="imageFile" accept="image/*" style="display: none;">
+                        <div id="imagePreview"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Project</button>
+                <button type="button" class="btn btn-danger" onclick="resetForm()">Cancel</button>
+            </form>
+
+            <div id="projectsList" class="projects-grid"></div>
+        </div>
+
+        <!-- Themes Section -->
+        <div id="themesSection" class="section">
+            <h2>Theme Management</h2>
+            <div id="themePreview" class="theme-preview"></div>
+            <button id="applyTheme" class="btn btn-primary">Apply Selected Theme</button>
+        </div>
+    </div>
+
+    <script>
+        let authToken = localStorage.getItem('authToken');
+        let currentProjects = [];
+        let availableThemes = {};
+        let currentTheme = '';
+        let selectedTheme = '';
+
+        // Check authentication on page load
+        if (authToken) {
+            showAdminPanel();
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: formData.get('username'),
+                        password: formData.get('password')
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.token;
+                    localStorage.setItem('authToken', authToken);
+                    showAdminPanel();
+                } else {
+                    showAlert('Login failed: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Login error: ' + error.message, 'error');
+            }
+        });
+
+        // Show admin panel
+        function showAdminPanel() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            loadProjects();
+            loadThemes();
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('authToken');
+            authToken = null;
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        // Section navigation
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(section + 'Section').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Alert system
+        function showAlert(message, type) {
+            const alertsContainer = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertsContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Load projects
+        async function loadProjects() {
+            try {
+                const response = await fetch('/api/projects');
+                currentProjects = await response.json();
+                renderProjects();
+            } catch (error) {
+                showAlert('Error loading projects: ' + error.message, 'error');
+            }
+        }
+
+        // Render projects
+        function renderProjects() {
+            const container = document.getElementById('projectsList');
+            container.innerHTML = '';
+
+            currentProjects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    ${project.image_path ? `<img src="${project.image_path}" alt="${project.title}">` : ''}
+                    <h3 style="color: ${project.color}">${project.title}</h3>
+                    <p><strong>Kategorie:</strong> ${project.category || 'Spiele'}</p>
+                    <p>${project.description}</p>
+                    ${project.project_url ? `<p><strong>URL:</strong> <a href="${project.project_url}" target="_blank">${project.project_url}</a></p>` : ''}
+                    <p><strong>Featured:</strong> ${project.is_featured ? 'Yes' : 'No'} | <strong>New:</strong> ${project.is_new ? 'Yes' : 'No'}</p>
+                    <div class="project-actions">
+                        <button class="btn btn-primary" onclick="editProject(${project.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteProject(${project.id})">Delete</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Load themes
+        async function loadThemes() {
+            try {
+                const [themesResponse, currentThemeResponse] = await Promise.all([
+                    fetch('/api/themes'),
+                    fetch('/api/theme')
+                ]);
+                
+                availableThemes = await themesResponse.json();
+                const currentThemeData = await currentThemeResponse.json();
+                currentTheme = currentThemeData.current;
+                selectedTheme = currentTheme;
+                
+                renderThemes();
+            } catch (error) {
+                showAlert('Error loading themes: ' + error.message, 'error');
+            }
+        }
+
+        // Render themes
+        function renderThemes() {
+            const container = document.getElementById('themePreview');
+            container.innerHTML = '';
+
+            Object.entries(availableThemes.themes).forEach(([key, theme]) => {
+                const card = document.createElement('div');
+                card.className = `theme-card ${key === selectedTheme ? 'selected' : ''}`;
+                card.style.background = theme.colors.background;
+                card.onclick = () => selectTheme(key);
+                
+                const gradient = `linear-gradient(45deg, ${theme.colors.gradientStart}, ${theme.colors.gradientMid}, ${theme.colors.gradientEnd})`;
+                
+                card.innerHTML = `
+                    <div class="color-strip" style="background: ${gradient}"></div>
+                    <h3 style="color: ${theme.colors.textLight}">${theme.name}</h3>
+                    <p style="color: ${theme.colors.text}">Accent: ${theme.colors.accent}</p>
+                    ${key === currentTheme ? '<p style="color: #4ecdc4; font-weight: bold;">Current Theme</p>' : ''}
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Select theme
+        function selectTheme(themeKey) {
+            selectedTheme = themeKey;
+            renderThemes();
+        }
+
+        // Apply theme
+        document.getElementById('applyTheme').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/admin/theme', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ theme: selectedTheme })
+                });
+
+                if (response.ok) {
+                    currentTheme = selectedTheme;
+                    showAlert('Theme applied successfully!', 'success');
+                    renderThemes();
+                } else {
+                    const data = await response.json();
+                    showAlert('Error applying theme: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Error applying theme: ' + error.message, 'error');
+            }
+        });
+
+        // Drag and drop functionality
+        const dragDropArea = document.getElementById('dragDropArea');
+        const fileInput = document.getElementById('imageFile');
+
+        dragDropArea.addEventListener('click', () => fileInput.click());
+        dragDropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.add('dragover');
+        });
+        dragDropArea.addEventListener('dragleave', () => {
+            dragDropArea.classList.remove('dragover');
+        });
+        dragDropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                previewImage(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                previewImage(e.target.files[0]);
+            }
+        });
+
+        // Preview image
+        function previewImage(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = `<img src="${e.target.result}" class="image-preview" alt="Preview">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Project form handler
+        document.getElementById('projectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const projectId = formData.get('projectId');
+            
+            // Add file if selected
+            if (fileInput.files.length > 0) {
+                formData.append('image', fileInput.files[0]);
+            }
+
+            try {
+                const url = projectId ? `/api/admin/projects/${projectId}` : '/api/admin/projects';
+                const method = projectId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showAlert(projectId ? 'Project updated successfully!' : 'Project created successfully!', 'success');
+                    resetForm();
+                    loadProjects();
+                } else {
+                    const data = await response.json();
+                    showAlert('Error saving project: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Error saving project: ' + error.message, 'error');
+            }
+        });
+
+        // Edit project
+        function editProject(id) {
+            const project = currentProjects.find(p => p.id === id);
+            if (!project) return;
+
+            document.getElementById('projectId').value = project.id;
+            document.getElementById('title').value = project.title;
+            document.getElementById('description').value = project.description;
+            document.getElementById('longDescription').value = project.long_description || '';
+            document.getElementById('projectUrl').value = project.project_url || '';
+            document.getElementById('category').value = project.category || 'Spiele';
+            document.getElementById('color').value = project.color;
+            document.getElementById('isFeatured').checked = project.is_featured;
+            document.getElementById('isNew').checked = project.is_new;
+
+            if (project.image_path) {
+                document.getElementById('imagePreview').innerHTML = 
+                    `<img src="${project.image_path}" class="image-preview" alt="Current image">`;
+            }
+
+            document.querySelector('#projectsSection h2').textContent = 'Edit Project';
+            
+            // Scroll to form
+            document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Delete project
+        async function deleteProject(id) {
+            if (!confirm('Are you sure you want to delete this project?')) return;
+
+            try {
+                const response = await fetch(`/api/admin/projects/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    showAlert('Project deleted successfully!', 'success');
+                    loadProjects();
+                } else {
+                    const data = await response.json();
+                    showAlert('Error deleting project: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Error deleting project: ' + error.message, 'error');
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            document.getElementById('category').value = 'Spiele';
+            document.getElementById('color').value = '#D946EF';
+            document.getElementById('imagePreview').innerHTML = '';
+            document.querySelector('#projectsSection h2').textContent = 'Project Management';
+            fileInput.value = '';
+        }
+    </script>
+</body>
+</html>
