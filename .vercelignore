@@ -1,0 +1,9 @@
+# Files to ignore during Vercel deployment
+.DS_Store
+*.psd
+*.md
+CREATE_REPO.sh
+PUSH_AFTER_REPO_CREATED.sh
+AUTHENTICATE_AND_PUSH.md
+PUSH_TO_GITHUB.md
+DEPLOYMENT.md
