@@ -15,15 +15,19 @@ body {
 
 /* Header */
 header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
     background-color: #1F2525;
     border-bottom: 1px solid #333333;
-    z-index: 10;
+    z-index: 1000;
+    box-sizing: border-box;
 }
 
 .logo {
@@ -69,7 +73,7 @@ nav a:hover {
 /* Hero */
 .hero {
     text-align: center;
-    padding: 100px 20px;
+    padding: 180px 20px 100px;
     position: relative;
     overflow: hidden;
     background: #1F2525;
@@ -562,6 +566,32 @@ p {
     background: linear-gradient(45deg, #8346d5, #ec1fe0);
 }
 
+/* Talk buchen button */
+.talk-buchen-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #ec1fe0, #8346d5);
+    color: #ffffff;
+    padding: 18px 45px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-top: 40px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(236, 31, 224, 0.4);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.5px;
+}
+
+.talk-buchen-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(236, 31, 224, 0.6);
+    background: linear-gradient(45deg, #8346d5, #ec1fe0);
+}
+
 /* Vibecoding */
 .vibecoding {
     text-align: center;
@@ -827,14 +857,27 @@ footer {
 /* Responsive */
 @media (max-width: 768px) {
     header {
-        flex-direction: column;
-        padding: 20px;
+        padding: 15px 20px;
+        flex-wrap: nowrap;
     }
+    
     nav {
-        margin-top: 15px;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+    
+    nav a {
+        margin-left: 15px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    
+    .logo img {
+        max-height: 40px;
     }
     .hero {
-        padding: 60px 20px;
+        padding: 140px 20px 60px;
     }
     .hero h1 {
         font-size: 36px;
@@ -1107,3 +1150,73 @@ footer {
         width: 18px;
         height: 18px;
     }
+
+/* Contact Modal */
+.contact-modal-content {
+    max-width: 500px;
+    width: 90%;
+}
+
+.contact-modal-body {
+    padding: 30px;
+    text-align: center;
+}
+
+.contact-modal-body h2 {
+    color: #ec1fe0;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.contact-modal-body p {
+    color: #B0B0B0;
+    margin-bottom: 30px;
+}
+
+.contact-modal-body .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.contact-modal-body label {
+    display: block;
+    color: #55FF99;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.contact-modal-body input,
+.contact-modal-body textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.contact-modal-body input:focus,
+.contact-modal-body textarea:focus {
+    outline: none;
+    border-color: #55FF99;
+}
+
+.contact-send-btn {
+    background: linear-gradient(45deg, #55FF99, #00D4AA);
+    color: #1a1a2e;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.contact-send-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(85, 255, 153, 0.4);
+}

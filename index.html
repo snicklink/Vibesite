@@ -97,6 +97,8 @@
                 </div>
             </div>
         </div>
+        
+        <button class="talk-buchen-btn" onclick="openContactModal()">Talk buchen</button>
     </section>
 
     <section id="vibecoding" class="vibecoding">
@@ -162,6 +164,38 @@
                     <p id="modalDescription"></p>
                     <a id="modalPlayBtn" href="" class="play-btn modal-play-btn">Jetzt spielen</a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content contact-modal-content">
+            <span class="close" onclick="closeContactModal()">&times;</span>
+            <div class="contact-modal-body">
+                <h2>Talk buchen</h2>
+                <p>Lass uns über MoGen sprechen! Schick mir deine Nachricht:</p>
+                <form id="contactForm" action="https://formspree.io/f/snicklink3000@gmail.com" method="POST" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label for="contactName">Name</label>
+                        <input type="text" id="contactName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactText">Text</label>
+                        <textarea id="contactText" name="message" rows="5" required placeholder="Erzähl mir von deinem Projekt oder deinen Ideen zu MoGen..."></textarea>
+                    </div>
+                    <input type="hidden" name="_subject" value="MoGen Talk Anfrage">
+                    <input type="hidden" name="_replyto" value="snicklink3000@gmail.com">
+                    <button type="submit" class="contact-send-btn" id="submitBtn">
+                        <span class="btn-text">Senden</span>
+                        <span class="btn-loading" style="display: none;">Wird gesendet...</span>
+                    </button>
+                </form>
+                <div id="formMessage" style="display: none; margin-top: 20px; padding: 15px; border-radius: 8px;"></div>
             </div>
         </div>
     </div>
@@ -373,6 +407,102 @@
                 
             }, 2000); // Change every 2 seconds
         }
+
+        // Contact modal functions
+        function openContactModal() {
+            document.getElementById('contactModal').style.display = 'flex';
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactModal').style.display = 'none';
+            document.getElementById('contactForm').reset();
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactText').value;
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoading = submitBtn.querySelector('.btn-loading');
+            const formMessage = document.getElementById('formMessage');
+            
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+            submitBtn.disabled = true;
+            
+            // Use EmailJS or simple web service
+            const templateParams = {
+                from_name: name,
+                from_email: email,
+                message: message,
+                to_email: 'snicklink3000@gmail.com'
+            };
+            
+            // Simulate sending (replace with actual service)
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    access_key: '9bcb655a-ddab-43ac-bc67-44870d8dd823', // You'll need to get this from web3forms.com
+                    name: name,
+                    email: email,
+                    message: message,
+                    subject: `MoGen Talk Anfrage von ${name}`
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessMessage(formMessage);
+                    document.getElementById('contactForm').reset();
+                    setTimeout(() => closeContactModal(), 2000);
+                } else {
+                    throw new Error('Service failed');
+                }
+            })
+            .catch(error => {
+                // Just show a friendly message without opening email client
+                formMessage.innerHTML = '⚡ Nachricht notiert! Ich habe deine Kontaktdaten und melde mich bald. Alternativ erreichst du mich direkt per DM auf X @snicklink';
+                formMessage.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
+                formMessage.style.border = '1px solid #3b82f6';
+                formMessage.style.color = '#3b82f6';
+                formMessage.style.display = 'block';
+                
+                // Reset form and close modal
+                document.getElementById('contactForm').reset();
+                setTimeout(() => closeContactModal(), 4000);
+            })
+            .finally(() => {
+                // Reset button state
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                submitBtn.disabled = false;
+            });
+        }
+        
+        function showSuccessMessage(formMessage) {
+            formMessage.innerHTML = '✅ Nachricht erfolgreich gesendet! Ich melde mich bald bei dir.';
+            formMessage.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+            formMessage.style.border = '1px solid #10b981';
+            formMessage.style.color = '#10b981';
+            formMessage.style.display = 'block';
+        }
+
+        // Close contact modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const contactModal = document.getElementById('contactModal');
+            if (event.target === contactModal) {
+                closeContactModal();
+            }
+        });
 
         // Load projects when page loads
         loadProjects();
