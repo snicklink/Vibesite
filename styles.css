@@ -430,12 +430,22 @@ p {
     font-size: 2.5rem;
     margin-bottom: 40px;
     text-align: center;
-    background: linear-gradient(45deg, #ec1fe0, #8346d5);
+    background: linear-gradient(90deg, #ec1fe0, #ff0080, #8346d5, #ff6b9d, #ec1fe0);
+    background-size: 400% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: mogenGradientShift 8s ease-in-out infinite;
     position: relative;
     z-index: 1;
+}
+
+@keyframes mogenGradientShift {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 100% 50%; }
+    50% { background-position: 200% 50%; }
+    75% { background-position: 300% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .mogen-hero-image {
@@ -481,9 +491,31 @@ p {
 
 .mogen-features {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 25px;
-    margin-top: 40px;
+    margin: 40px 0;
+}
+
+.mogen-example, .mogen-future {
+    margin: 40px 0;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mogen-example h3, .mogen-future h3 {
+    color: #C084FC;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.mogen-example p, .mogen-future p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #ffffff;
 }
 
 .feature {
@@ -855,4 +887,23 @@ footer a:hover {
     .featured-game .text-container {
         text-align: center !important;
     }
+}
+
+
+/* Hero meta text */
+.hero-meta-text {
+    max-width: 1200px;
+    margin: 20px auto 0;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.hero-meta-text p {
+    font-size: 14.4px;
+    color: #B0B0B0;
+    line-height: 1.5;
+    font-style: italic;
+    opacity: 0.8;
+    margin: 0;
 }
