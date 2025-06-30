@@ -13,27 +13,57 @@
             <img src="images/snick_vibe_logo.png" alt="Snicklink Vibe Logo">
         </div>
         <nav>
-            <a href="#spiele">Spiele</a>
+            <a href="#projekte">Projekte</a>
+            <a href="#mogen">MoGen</a>
             <a href="#vibecoding">Vibecoding</a>
             <a href="#magazin">Magazin</a>
         </nav>
     </header>
 
     <section class="hero">
-        <div class="hero-logo">
-            <img src="images/snick_vibe_logo.png" alt="Snicklink Vibe Logo">
-        </div>
         <h1>Vibecoding Walhalla</h1>
-        <p>Meine aktuellsten Schwurbel-Games</p>
         <div class="featured-game" id="featuredGame">
             <!-- Featured game will be inserted here -->
         </div>
     </section>
 
-    <section id="spiele">
-        <div id="gamesGrid" class="game-grid">
-            <!-- Games will be inserted here -->
+    <section id="projekte">
+        <div id="projectsContainer">
+            <!-- Projects will be inserted here by category -->
         </div>
+    </section>
+
+    <section id="mogen" class="mogen-section">
+        <h2>MoGen: Die Zukunft der Unterhaltung</h2>
+        
+        <div class="mogen-hero-image">
+            <img src="images/mogen_new1_copy.jpg" alt="MoGen Visualization" class="mogen-banner">
+        </div>
+        
+        <div class="mogen-content">
+            <div class="mogen-text">
+                <p>MoGen (Modular Generative Entertainment) ist mehr als nur Technologie – es ist eine Revolution. Stell dir vor, deine Hochzeit löst eine epische romantische Saga aus, die mit deinen Flitterwochen-Vibes weiterentwickelt wird. Oder ein einfacher Sandwich-Biss spawnt eine Sci-Fi-Geschichte, die sich mit deiner Stimmung und Nostalgie vermischt.</p>
+                
+                <p>In einer post-arbeitsfreien Welt, wo KI Jobs verdrängt, werden Geschichten zu deinem Lebenspuls. MoGen macht Entertainment zu deinem Lebens-Co-Autor: Geschichten entstehen aus deinem Alltag, passen sich an deine Kultur an und verbinden sich mit anderen zu einem lebendigen Universum.</p>
+                
+                <div class="mogen-features">
+                    <div class="feature">
+                        <h4>🎭 Lebens-integrierte Narrative</h4>
+                        <p>Geschichten entstehen aus deinem Leben – Essen, Feiern, Bewegen lösen contextuelle Erzählungen aus</p>
+                    </div>
+                    <div class="feature">
+                        <h4>🌍 Kulturelle Remixes</h4>
+                        <p>Globale Traditionen verschmelzen für persönliche Resonanz – Bollywood trifft afrikanische Epen</p>
+                    </div>
+                    <div class="feature">
+                        <h4>🔗 Vernetzte Universen</h4>
+                        <p>Deine Saga verbindet sich mit anderen und erschafft eine geteilte Mythologie</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <a href="mogen.html" class="mogen-btn">Entdecke MoGen</a>
     </section>
 
     <section id="vibecoding" class="vibecoding">
@@ -142,26 +172,95 @@
             // Find featured project
             const featured = projects.find(p => p.featured) || projects[0];
             
-            // Render featured game
+            // Render featured game with slideshow
             document.getElementById('featuredGame').innerHTML = `
-                <img src="${featured.image}" alt="${featured.title}" class="thumbnail">
-                <h2 style="color: ${featured.color};">${featured.title} ${featured.new ? '<span class="new-tag">Neu</span>' : ''}</h2>
-                <p>${featured.description}</p>
-                <a href="${featured.url}" class="play-btn">Jetzt spielen</a>
-            `;
-
-            // Render all games
-            document.getElementById('gamesGrid').innerHTML = projects.map((project, index) => `
-                <div class="game">
-                    <img src="${project.image}" alt="${project.title}" class="thumbnail">
-                    <h3 style="color: ${project.color};">${project.title} ${project.new ? '<span class="new-tag">Neu</span>' : ''}</h3>
-                    <p>${project.description}</p>
-                    <div class="game-buttons">
-                        <a href="${project.url}" class="play-btn">Jetzt spielen</a>
-                        ${project.longDescription ? `<button class="more-btn" onclick="showGameDetails(${index})">Mehr</button>` : ''}
-                    </div>
+                <div class="image-container">
+                    <img src="${featured.image}" alt="${featured.title}" class="thumbnail" id="featuredImage">
                 </div>
-            `).join('');
+                <div class="text-container">
+                    <p>Das nächste Kapitel im A.I.-powered Metaverse des Entertainments. MoGen macht's möglich! Durch die Vernetzung smarter K.I. Coding Agenten wie Claude Code und Cursor entstehen völlig ungeahnte Apps, Systeme und Games. Von sprachgesteuerten Retrowave-Abenteuern bis hin zu lebendigen AI-Persönlichkeiten mit echten Bedürfnissen – jede Experience ist einzigartig auf ihre eigene Weise. Via API/MCP Calls entstehen so interaktive, dynamische, generative Unterhaltungswelten, die KEIN User gleich erlebt. Hier einige der aktuellen Projekte.</p>
+                </div>
+            `;
+            
+            // Start slideshow
+            startFeaturedSlideshow(projects);
+
+            // Group projects by category
+            const categories = {};
+            projects.forEach(project => {
+                const category = project.category || 'Sonstiges';
+                if (!categories[category]) {
+                    categories[category] = [];
+                }
+                categories[category].push(project);
+            });
+
+            // Define category order
+            const categoryOrder = ['MoGen Apps', 'Spiele'];
+            
+            // Render projects by category
+            let html = '';
+            categoryOrder.forEach(categoryName => {
+                if (categories[categoryName] && categories[categoryName].length > 0) {
+                    html += `
+                        <div class="category-section" data-category="${categoryName}">
+                            <h2 class="category-title" data-category="${categoryName}">${categoryName}</h2>
+                            <div class="game-grid">
+                                ${categories[categoryName].map((project, index) => {
+                                    const globalIndex = projects.indexOf(project);
+                                    return `
+                                        <div class="game">
+                                            <img src="${project.image}" alt="${project.title}" class="thumbnail">
+                                            <h3 style="color: ${project.color};">${project.title} ${project.new ? '<span class="new-tag">Neu</span>' : ''}</h3>
+                                            <p>${project.description}</p>
+                                            <div class="game-buttons">
+                                                ${project.category === 'MoGen Apps' 
+                                                    ? '<span class="coming-soon-btn">Demnächst</span>' 
+                                                    : `<a href="${project.url}" class="play-btn">Jetzt spielen</a>`
+                                                }
+                                                ${project.longDescription ? `<button class="more-btn" onclick="showGameDetails(${globalIndex})">Mehr</button>` : ''}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('projectsContainer').innerHTML = html;
+        }
+
+        // Featured image slideshow
+        let slideshowInterval;
+        let currentSlideIndex = 0;
+        
+        function startFeaturedSlideshow(projects) {
+            if (slideshowInterval) {
+                clearInterval(slideshowInterval);
+            }
+            
+            const featuredImage = document.getElementById('featuredImage');
+            if (!featuredImage || projects.length <= 1) return;
+            
+            currentSlideIndex = 0;
+            
+            slideshowInterval = setInterval(() => {
+                currentSlideIndex = (currentSlideIndex + 1) % projects.length;
+                const nextProject = projects[currentSlideIndex];
+                
+                // Fade out
+                featuredImage.style.opacity = '0';
+                
+                setTimeout(() => {
+                    // Change image and fade in
+                    featuredImage.src = nextProject.image;
+                    featuredImage.alt = nextProject.title;
+                    featuredImage.style.opacity = '1';
+                }, 250); // Half of transition duration
+                
+            }, 2000); // Change every 2 seconds
         }
 
         // Load projects when page loads
